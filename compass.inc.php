@@ -1,7 +1,7 @@
 <?php
 
 class scss_compass {
-	protected $libFunctions = array("lib_compact",'font_files');
+	protected $libFunctions = array("lib_compact",'font_files','font_url');
 	
 	static public $true = array("keyword", "true");
 	static public $false = array("keyword", "false");
@@ -51,19 +51,37 @@ class scss_compass {
 //			echo json_encode($file);die;
 			$type = array_shift($files);
 			$type = $this->concatenate($type[2]);
-			$list .= "font-url('$file') format('$type')";
+			$list .= $this->font_url($file)." format('$type')";
 			if (!empty($files))
 				$list .= ", ";
 		}
 		return $list;
 	}
 
+	public function font_url($path)
+	{
+		if(is_array($path)) {
+			$args = $path[0];
+
+			$path = $this->concatenate($args[2]);
+
+		}
+		return "url('$path')";
+	}
+
 	private function concatenate($data)
 	{
+
 		$string = array_shift($data);
 		while(!empty($data)) {
 			$s = array_shift($data);
-			$string .= $this->concatenate($s[2]);
+			if($s[0]== "string") {
+				$string .= $this->concatenate($s[2]);
+			}elseif($s[0] == "interpolate"){
+				$string .= $this->concatenate($s[1][2]);
+			}elseif(is_string($s)){
+				$string .= $s;
+			}
 		}
 		return $string;
 
