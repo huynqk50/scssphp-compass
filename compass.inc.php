@@ -46,13 +46,26 @@ class scss_compass {
 		$list = "";
 		while(!empty($files)) {
 			$file = array_shift($files);
-			$file = $file[2][0];
+
+			$file = $this->concatenate($file[2]);
+//			echo json_encode($file);die;
 			$type = array_shift($files);
-			$type = $type[2][0];
+			$type = $this->concatenate($type[2]);
 			$list .= "font-url('$file') format('$type')";
 			if (!empty($files))
 				$list .= ", ";
 		}
 		return $list;
+	}
+
+	private function concatenate($data)
+	{
+		$string = array_shift($data);
+		while(!empty($data)) {
+			$s = array_shift($data);
+			$string .= $this->concatenate($s[2]);
+		}
+		return $string;
+
 	}
 }
