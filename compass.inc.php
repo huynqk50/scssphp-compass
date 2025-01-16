@@ -2,7 +2,7 @@
 
 class scss_compass {
 	protected $libFunctions = array("lib_compact",'font_files','font_url');
-	
+	protected $scss;
 	static public $true = array("keyword", "true");
 	static public $false = array("keyword", "false");
 
